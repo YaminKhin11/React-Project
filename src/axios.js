@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://10.103.0.142:8000/api/v1",
+  baseURL: "http://localhost:8000/api/v1",
 });
 
 // Request interceptor
@@ -43,7 +43,9 @@ instance.interceptors.response.use(
 const refreshToken = async () => {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
-    const response = await instance.post("/refresh", { refreshToken });
+    const response = await instance.post("/refresh", {
+      refreshTokenFromUser: refreshToken,
+    });
     const newToken = response.data.accessToken; // Assuming the server returns accessToken
     localStorage.setItem("accessToken", newToken); // Update accessToken in localStorage
     return newToken;

@@ -25,7 +25,7 @@ const Request = () => {
     const payload = {
       reason: reason,
       date: date,
-      UserId: id,
+      id,
       adminApproved: status,
     };
     console.log(payload);

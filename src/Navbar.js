@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { HiOutlineLogout } from "react-icons/hi";
-import ProfileImage from "./images/aa.jpg";
+import ProfileImage from "./images/profile.jpg";
 import LogoImage from "./images/triple.png";
 import { UserContext } from "./UserContext";
 

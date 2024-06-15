@@ -1,6 +1,6 @@
 // import React, { useContext, useState, useEffect } from "react";
 // import { FaEye, FaEyeSlash } from "react-icons/fa";
-// import Photo from "./Image/profile.jpg";
+// import Photo from "./images/profile.jpg";
 // import { UserContext } from "./UserContext";
 // import { axiosInstance } from "./axios";
 
@@ -200,10 +200,9 @@
 
 import React, { useContext, useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Photo from "./images/aa.jpg";
+import Photo from "./images/profile.jpg";
 import { UserContext } from "./UserContext";
 import { axiosInstance } from "./axios";
-import axios from "axios";
 
 const Modal = ({ show }) => {
   if (!show) {
@@ -255,8 +254,8 @@ const Profile = () => {
   const handleChangePassword = async () => {
     if (formData.newPassword.trim() !== "") {
       try {
-        const response = await axios.post(
-          "http://10.103.0.142:8000/api/v1/users/resetPassword",
+        const response = await axiosInstance.post(
+          "/users/resetPassword",
           formData
         );
 

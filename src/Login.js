@@ -24,10 +24,7 @@ function Login({ onLogin }) {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post(
-        "http://10.103.0.142:8000/api/v1/users/loginUser",
-        data
-      );
+      const response = await axiosInstance.post("/users/loginUser", data);
       if (response.status === 200) {
         const accesstoken = response.data.accessToken;
         const refreshtoken = response.data.refreshToken;
