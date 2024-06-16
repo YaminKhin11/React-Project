@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTable, usePagination } from "react-table";
 import { Link, useLocation } from "react-router-dom";
 import { FaSearch, FaArrowLeft, FaArrowRight } from "react-icons/fa";
@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { axiosInstance } from "./axios";
+import { UserContext } from "./UserContext";
 
 const Attendance = () => {
   const [data, setData] = useState([]);
@@ -18,6 +19,9 @@ const Attendance = () => {
   const [startDate, endDate] = dateRange;
   const [selectedDept, setSelectedDept] = useState("");
   const [selectedPosition, setSelectedPosition] = useState("");
+
+  const { user } = useContext(UserContext);
+  const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
     fetchAttendanceData();
@@ -145,10 +149,21 @@ const Attendance = () => {
     }
     return pageNumbers;
   };
-  const departments = [
-    ...new Set(data.map((attendance) => attendance.departmentName)),
-  ];
-  const positions = [...new Set(data.map((attendance) => attendance.position))];
+
+  useEffect(() => {
+    axiosInstance
+      .get("/departments/")
+      .then((response) => {
+        setDepartments(response?.data?.data || []);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
+  useEffect(() => {
+    if (user.role === 3000) {
+      setSelectedDept(user.department);
+    }
+  }, [user]);
 
   return (
     <main className="main-container">
@@ -247,6 +262,18 @@ const Attendance = () => {
               placeholderText="Select date range"
               className="text-black rounded-md"
             />
+
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search by position"
+                value={selectedPosition}
+                onChange={(e) => setSelectedPosition(e.target.value)}
+                className="text-black rounded-md"
+              />
+              <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            </div>
+
             <select
               value={selectedDept}
               onChange={(e) => setSelectedDept(e.target.value)}
@@ -254,21 +281,8 @@ const Attendance = () => {
             >
               <option value="">All Departments</option>
               {departments.map((dept) => (
-                <option key={dept} value={dept}>
-                  {dept}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={selectedPosition}
-              onChange={(e) => setSelectedPosition(e.target.value)}
-              className="text-black rounded-sm"
-            >
-              <option value="">All Position</option>
-              {positions.map((pos) => (
-                <option key={pos} value={pos}>
-                  {pos}
+                <option key={dept.deptName} value={dept.deptName}>
+                  {dept.deptName}
                 </option>
               ))}
             </select>

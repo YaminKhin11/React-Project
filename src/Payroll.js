@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { useTable, usePagination } from "react-table";
 import { FaSearch, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { axiosInstance } from "./axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { UserContext } from "./UserContext";
 
 const Payroll = () => {
   const [data, setData] = useState([]);
@@ -27,6 +28,9 @@ const Payroll = () => {
   const [selectedYear, setSelectedYear] = useState(
     location.state?.selectedYear || currentYear
   );
+
+  const { user } = useContext(UserContext);
+  const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
     fetchPayrollData();
@@ -187,8 +191,20 @@ const Payroll = () => {
     return pageNumbers;
   };
 
-  const departments = [...new Set(data.map((employee) => employee.deptName))];
-  const positions = [...new Set(data.map((employee) => employee.position))];
+  useEffect(() => {
+    axiosInstance
+      .get("/departments/")
+      .then((response) => {
+        setDepartments(response?.data?.data || []);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
+  useEffect(() => {
+    if (user.role === 3000) {
+      setSelectedDept(user.department);
+    }
+  }, [user]);
 
   return (
     <main className="main-container">
@@ -252,6 +268,17 @@ const Payroll = () => {
               />
               <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
             </div>
+
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search by position"
+                value={selectedPosition}
+                onChange={(e) => setSelectedPosition(e.target.value)}
+                className="text-black rounded-md"
+              />
+              <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            </div>
             <select
               value={selectedDept}
               onChange={(e) => setSelectedDept(e.target.value)}
@@ -259,21 +286,8 @@ const Payroll = () => {
             >
               <option value="">All Departments</option>
               {departments.map((dept) => (
-                <option key={dept} value={dept}>
-                  {dept}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={selectedPosition}
-              onChange={(e) => setSelectedPosition(e.target.value)}
-              className="text-black rounded-sm"
-            >
-              <option value="">All Position</option>
-              {positions.map((pos) => (
-                <option key={pos} value={pos}>
-                  {pos}
+                <option key={dept.deptName} value={dept.deptName}>
+                  {dept.deptName}
                 </option>
               ))}
             </select>

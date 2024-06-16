@@ -15,18 +15,12 @@ import Detail from "./Detail";
 import { UserContext } from "./UserContext";
 
 const RouteWrapper = () => {
-  // Check if user is logged in based on local storage
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("isLoggedIn") === "true"
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    // Update local storage when user logs in or out
     if (user) {
-      localStorage.setItem("isLoggedIn", "true");
-    } else {
-      localStorage.removeItem("isLoggedIn");
+      setIsLoggedIn(true);
     }
   }, [user]);
 

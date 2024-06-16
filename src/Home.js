@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { MdFormatListBulleted } from "react-icons/md";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
@@ -18,6 +18,7 @@ import { easeQuadInOut } from "d3-ease";
 import AnimatedProgressProvider from "./AnimatedProgressProvider";
 import { LuListX } from "react-icons/lu";
 import { PiUserListBold } from "react-icons/pi";
+import { UserContext } from "./UserContext";
 
 const Home = () => {
   const [userData, setUserData] = useState({
@@ -39,6 +40,7 @@ const Home = () => {
   const addItemToArray = [];
 
   let result;
+  const { user } = useContext(UserContext);
 
   const handleOkClick = async () => {
     if (dates.length === 0) {
@@ -112,6 +114,12 @@ const Home = () => {
   };
 
   const renderCircularProgress = (title, departmentCount) => {
+    if (user.role === 3000) {
+      if (user.department !== title) {
+        return null;
+      }
+    }
+
     const totalEmployees = totalEmployeesPerDept[title] || 1;
     const departmentAttendance = departmentCount || 0;
     const percentage = totalEmployees

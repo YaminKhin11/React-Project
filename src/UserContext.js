@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 export const UserContext = createContext({
   user: null,
@@ -11,9 +11,8 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
   const addUser = (user) => {
-    const { username, email } = user?.userData;
-    setUser({ username, email });
-    localStorage.setItem("user", JSON.stringify({ username, email }));
+    setUser({ ...user.userData });
+    localStorage.setItem("user", JSON.stringify(user.userData));
   };
 
   const removeUser = () => {
