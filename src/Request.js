@@ -323,6 +323,7 @@ const Request = () => {
               value={selectedDept}
               onChange={(e) => setSelectedDept(e.target.value)}
               className="text-black rounded-sm"
+              disabled={user.role === 3000}
             >
               <option value="">All Departments</option>
               {departments.map((dept) => (

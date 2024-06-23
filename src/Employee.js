@@ -8,14 +8,12 @@ import {
   FaTrash,
   FaPlus,
 } from "react-icons/fa";
-
 import { motion } from "framer-motion";
 import { axiosInstance } from "./axios";
 import { UserContext } from "./UserContext";
 
 const Employee = () => {
   const { user } = useContext(UserContext);
-
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -25,7 +23,6 @@ const Employee = () => {
   const [selectedDept, setSelectedDept] = useState("");
   const [selectedPosition, setSelectedPosition] = useState("");
   const [totalPages, setTotalPages] = useState(0);
-
   const [isEdit, setIsEdit] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [departments, setDepartments] = useState([]);
@@ -404,7 +401,18 @@ const Employee = () => {
               />
               <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
             </div>
-
+            {/* <select
+              value={selectedPosition}
+              onChange={(e) => setSelectedPosition(e.target.value)}
+              className="text-black rounded-sm"
+            >
+              <option value="">All Position</option>
+              {departments.map((pos) => (
+                <option key={pos.position} value={pos.position}>
+                  {pos.position}
+                </option>
+              ))}
+            </select> */}
             <select
               value={selectedDept}
               onChange={(e) => setSelectedDept(e.target.value)}

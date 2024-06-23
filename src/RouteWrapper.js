@@ -15,12 +15,23 @@ import Detail from "./Detail";
 import { UserContext } from "./UserContext";
 
 const RouteWrapper = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("isLoggedIn") === "true"
+  );
   const { user } = useContext(UserContext);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     setIsLoggedIn(true);
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     if (user) {
-      setIsLoggedIn(true);
+      localStorage.setItem("isLoggedIn", "true");
+    } else {
+      localStorage.removeItem(isLoggedIn);
     }
   }, [user]);
 

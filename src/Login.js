@@ -4,7 +4,6 @@ import { FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import { UserContext } from "./UserContext";
-import axios from "axios";
 import { axiosInstance } from "./axios";
 
 Modal.setAppElement("#root");
@@ -24,7 +23,7 @@ function Login({ onLogin }) {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axiosInstance.post("/users/loginUser", data);
+      const response = await axiosInstance.post("/login/loginUser", data);
       if (response.status === 200) {
         const accesstoken = response.data.accessToken;
         const refreshtoken = response.data.refreshToken;
@@ -70,7 +69,7 @@ function Login({ onLogin }) {
               htmlFor="employeeId"
               className="block text-white text-sm mb-1"
             >
-              Userid
+              EmployeeId
             </label>
             <div className="flex items-center border border-[#E1FF3C] rounded-md overflow-hidden relative">
               <input
@@ -110,6 +109,7 @@ function Login({ onLogin }) {
                 })}
                 placeholder="Password"
               />
+
               {showPassword ? (
                 <FaEye
                   className="text-gray-400 absolute right-0 top-0 bottom-0 m-auto mr-3 cursor-pointer"

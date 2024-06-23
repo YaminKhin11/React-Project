@@ -89,6 +89,14 @@ const Attendance = () => {
         Header: "Out Time",
         accessor: "out_time",
       },
+      {
+        Header: "Late In Time",
+        accessor: "late_in_time",
+      },
+      {
+        Header: "Early Out Time",
+        accessor: "early_out_time",
+      },
     ],
     [page, pageSize]
   );
@@ -278,6 +286,7 @@ const Attendance = () => {
               value={selectedDept}
               onChange={(e) => setSelectedDept(e.target.value)}
               className="text-black rounded-sm"
+              disabled={user.role === 3000}
             >
               <option value="">All Departments</option>
               {departments.map((dept) => (

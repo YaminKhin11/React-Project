@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { axiosInstance } from "./axios";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
+
 const Detail = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);

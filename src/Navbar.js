@@ -46,7 +46,7 @@ const Navbar = () => {
               onClick={goToProfile}
             >
               <img
-                src={ProfileImage}
+                src={user.profileImage}
                 alt="Profile"
                 className="h-10 w-10 rounded-full inline"
               />

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-
 import { MdFormatListBulleted } from "react-icons/md";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import DatePicker from "react-multi-date-picker";
@@ -12,7 +11,6 @@ import { NavLink } from "react-router-dom";
 import CountUp from "react-countup";
 import "./App.css";
 import { motion } from "framer-motion";
-import axios from "axios";
 import { axiosInstance } from "./axios";
 import { easeQuadInOut } from "d3-ease";
 import AnimatedProgressProvider from "./AnimatedProgressProvider";
@@ -35,38 +33,38 @@ const Home = () => {
     Planning: 0,
   });
   const [employeeData, setEmployeeData] = useState({ totalCount: 0 });
-  const [dates, setDates] = useState([]);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const addItemToArray = [];
+  // const [dates, setDates] = useState([]);
+  // const [showDatePicker, setShowDatePicker] = useState(false);
+  // const addItemToArray = [];
 
-  let result;
+  // let result;
   const { user } = useContext(UserContext);
 
-  const handleOkClick = async () => {
-    if (dates.length === 0) {
-      alert("Select Some Date");
-      return;
-    }
+  // const handleOkClick = async () => {
+  //   if (dates.length === 0) {
+  //     alert("Select Some Date");
+  //     return;
+  //   }
 
-    const addItemToArray = dates.map((date) => date.format("YYYY-MM-DD"));
-    const dates2 = { dates: addItemToArray };
+  //   const addItemToArray = dates.map((date) => date.format("YYYY-MM-DD"));
+  //   const dates2 = { dates: addItemToArray };
 
-    if (dates2.dates.length > 0) {
-      try {
-        const result = await axiosInstance.post("/holidays/add", dates2);
-        console.log(result);
-      } catch (error) {
-        console.error("Error sending data:", error);
-        alert("An error occurred while sending the data. Please try again.");
-      }
-    } else {
-      alert("Choose something to send");
-    }
-  };
-  const handleResetClick = () => {
-    console.log(addItemToArray);
-  };
-  const currentYear = new Date().getFullYear();
+  //   if (dates2.dates.length > 0) {
+  //     try {
+  //       const result = await axiosInstance.post("/holidays/add", dates2);
+  //       console.log(result);
+  //     } catch (error) {
+  //       console.error("Error sending data:", error);
+  //       alert("An error occurred while sending the data. Please try again.");
+  //     }
+  //   } else {
+  //     alert("Choose something to send");
+  //   }
+  // };
+  // const handleResetClick = () => {
+  //   console.log(addItemToArray);
+  // };
+  // const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     axiosInstance
@@ -193,7 +191,7 @@ const Home = () => {
             Manage your teams well for a productive day!
           </p>
         </div>
-        <div>
+        {/* <div>
           <button
             onClick={() => setShowDatePicker(!showDatePicker)}
             className="bg-black text-white py-1 px-2 border-solid border-black border-[1px]"
@@ -229,7 +227,7 @@ const Home = () => {
               </DatePicker>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
       <div className="grid grid-cols-1 gap-4 tablet:grid-cols-3 mt-16">
         <motion.div
