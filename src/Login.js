@@ -25,6 +25,11 @@ function Login({ onLogin }) {
     try {
       const response = await axiosInstance.post("/login/loginUser", data);
       if (response.status === 200) {
+        //  if user 1000
+        if (response.data.userData.role === 1000) {
+          setLoginMessage("User can't login");
+          return;
+        }
         const accesstoken = response.data.accessToken;
         const refreshtoken = response.data.refreshToken;
         localStorage.setItem("accessToken", accesstoken);

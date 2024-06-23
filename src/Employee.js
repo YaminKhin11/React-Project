@@ -11,6 +11,10 @@ import {
 import { motion } from "framer-motion";
 import { axiosInstance } from "./axios";
 import { UserContext } from "./UserContext";
+import Modal from "react-modal";
+import { departmentList, positionList, userRoleList } from "./data";
+
+Modal.setAppElement("#root");
 
 const Employee = () => {
   const { user } = useContext(UserContext);
@@ -44,6 +48,7 @@ const Employee = () => {
     attendanceLeave: "",
     address: "",
   });
+  const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -167,11 +172,19 @@ const Employee = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const confirmDelete = (id) => {
+    setDeleteId(id);
+  };
+  const cancelDelete = () => {
+    setDeleteId(null);
+  };
+
+  const handleDelete = async () => {
     try {
-      const endpoint = `/users/deleteUser/${id}`;
+      const endpoint = `/users/deleteUser/${deleteId}`;
       await axiosInstance.delete(endpoint);
       fetchEmployeeData();
+      cancelDelete();
     } catch (error) {
       console.error("Error deleting employee data:", error);
     }
@@ -247,7 +260,7 @@ const Employee = () => {
                 />
                 <FaTrash
                   className="text-red-500 cursor-pointer"
-                  onClick={() => handleDelete(row.original.id)}
+                  onClick={() => confirmDelete(row.original.id)}
                 />
               </>
             )}
@@ -434,14 +447,10 @@ const Employee = () => {
             style={{ border: "solid 1px black" }}
           >
             <thead>
-              {headerGroups.map((headerGroup, index) => (
-                <tr
-                  {...headerGroup.getHeaderGroupProps()}
-                  key={`hrow-${index}`}
-                >
-                  {headerGroup.headers.map((column, index) => (
+              {headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
                     <th
-                      key={`hcol-${index}`}
                       {...column.getHeaderProps()}
                       style={{
                         borderBottom: "solid 3px black",
@@ -461,7 +470,7 @@ const Employee = () => {
               {rows.map((row, index) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()} key={`row-${index}`}>
+                  <tr {...row.getRowProps()}>
                     {row.cells.map((cell, index) => {
                       return (
                         <td
@@ -471,7 +480,6 @@ const Employee = () => {
                             border: "solid 1px gray",
                             background: "#E1FF3C",
                           }}
-                          key={`cell-${index}`}
                         >
                           {cell.render("Cell")}
                         </td>
@@ -548,7 +556,8 @@ const Employee = () => {
                     className="p-2 border border-gray-300 rounded text-black"
                   />
                   <input
-                    type="text"
+                    type="email"
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                     placeholder="Email"
                     required
                     value={newEmployeeData.email}
@@ -562,7 +571,7 @@ const Employee = () => {
                   />
                   <input
                     type="password"
-                    placeholder="password"
+                    placeholder="Password"
                     required
                     value={newEmployeeData.password}
                     onChange={(e) =>
@@ -573,9 +582,7 @@ const Employee = () => {
                     }
                     className="p-2 border border-gray-300 rounded text-black"
                   />
-                  <input
-                    type="text"
-                    placeholder="Gender"
+                  <select
                     required
                     value={newEmployeeData.gender}
                     onChange={(e) =>
@@ -584,11 +591,17 @@ const Employee = () => {
                         gender: e.target.value,
                       })
                     }
-                    disabled={isEdit}
                     className="p-2 border border-gray-300 rounded text-black"
-                  />
+                  >
+                    <option value="" disabled selected>
+                      Gender
+                    </option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+
                   <input
-                    type="text"
+                    type="date"
                     placeholder="DOB"
                     required
                     value={newEmployeeData.dob}
@@ -598,12 +611,9 @@ const Employee = () => {
                         dob: e.target.value,
                       })
                     }
-                    disabled={isEdit}
                     className="p-2 border border-gray-300 rounded text-black"
                   />
-                  <input
-                    type="text"
-                    placeholder="Role"
+                  <select
                     required
                     value={newEmployeeData.role}
                     onChange={(e) =>
@@ -612,9 +622,17 @@ const Employee = () => {
                         role: e.target.value,
                       })
                     }
-                    disabled={isEdit}
                     className="p-2 border border-gray-300 rounded text-black"
-                  />
+                  >
+                    <option value="" disabled selected>
+                      Role
+                    </option>
+                    {userRoleList.map((role) => (
+                      <option value={role.value} key={role.value}>
+                        {role.label}
+                      </option>
+                    ))}
+                  </select>
                   <input
                     type="text"
                     placeholder="Employee ID"
@@ -628,9 +646,7 @@ const Employee = () => {
                     }
                     className="p-2 border border-gray-300 rounded text-black"
                   />
-                  <input
-                    type="text"
-                    placeholder="Position"
+                  <select
                     required
                     value={newEmployeeData.position}
                     onChange={(e) =>
@@ -640,10 +656,17 @@ const Employee = () => {
                       })
                     }
                     className="p-2 border border-gray-300 rounded text-black"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Department"
+                  >
+                    <option value="" disabled selected>
+                      Position
+                    </option>
+                    {positionList.map((position) => (
+                      <option value={position} key={position}>
+                        {position}
+                      </option>
+                    ))}
+                  </select>
+                  <select
                     required
                     value={newEmployeeData.departmentName}
                     onChange={(e) =>
@@ -653,7 +676,16 @@ const Employee = () => {
                       })
                     }
                     className="p-2 border border-gray-300 rounded text-black"
-                  />
+                  >
+                    <option value="" disabled selected>
+                      Department
+                    </option>
+                    {departmentList.map((department) => (
+                      <option value={department} key={department}>
+                        {department}
+                      </option>
+                    ))}
+                  </select>
                   <input
                     type="text"
                     placeholder="NRC"
@@ -691,11 +723,10 @@ const Employee = () => {
                         address: e.target.value,
                       })
                     }
-                    disabled={isEdit}
                     className="p-2 border border-gray-300 rounded text-black"
                   />
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Salary"
                     required
                     value={newEmployeeData.salary}
@@ -708,7 +739,7 @@ const Employee = () => {
                     className="p-2 border border-gray-300 rounded text-black"
                   />
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Annual Leave"
                     required
                     value={newEmployeeData.annualLeave}
@@ -721,7 +752,7 @@ const Employee = () => {
                     className="p-2 border border-gray-300 rounded text-black"
                   />
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Medical Leave"
                     required
                     value={newEmployeeData.medicalLeave}
@@ -734,7 +765,7 @@ const Employee = () => {
                     className="p-2 border border-gray-300 rounded text-black"
                   />
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Attendance Leave"
                     required
                     value={newEmployeeData.attendanceLeave}
@@ -770,6 +801,31 @@ const Employee = () => {
           </div>
         )}
       </div>
+
+      <Modal
+        isOpen={deleteId !== null}
+        className="flex justify-center items-center min-h-screen"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-75"
+      >
+        <div className="bg-white p-8 rounded-md shadow-lg text-center">
+          <h2 className="text-2xl mb-4">Are you sure to delete?</h2>
+
+          <div className="d-flex justify-between">
+            <button
+              className="mx-2 px-2 py-1 border border-gray-300 rounded text-black"
+              onClick={cancelDelete}
+            >
+              Cancel
+            </button>
+            <button
+              className="mx-2 px-2 py-1 border border-gray-300 rounded text-white bg-red-800"
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </Modal>
     </main>
   );
 };
