@@ -49,6 +49,43 @@ const Employee = () => {
     address: "",
   });
   const [deleteId, setDeleteId] = useState(null);
+  const [hasFormError, setHasFormError] = useState(false);
+  const [formError, setFormError] = useState(false);
+
+  const validateData = () => {
+    // check empty
+    const isEmpty = Object.entries(newEmployeeData).reduce(
+      (acc, [key, value]) => {
+        if (isEdit && key === "password") acc = true;
+        else acc = !value;
+        return acc;
+      },
+      false
+    );
+
+    if (isEmpty) {
+      setFormError("Please fill all input");
+      setHasFormError(true);
+
+      setTimeout(() => {
+        setHasFormError(false);
+      }, 3000);
+      return false;
+    }
+
+    // check email validatation
+
+    if (!/^[^@]+@[^@]+\.[^@]+$/.test(newEmployeeData.email)) {
+      setFormError("Invalid email format");
+      setHasFormError(true);
+      setTimeout(() => {
+        setHasFormError(false);
+      }, 3000);
+      return false;
+    }
+
+    return true;
+  };
 
   useEffect(() => {
     if (user) {
@@ -84,10 +121,10 @@ const Employee = () => {
   };
 
   const submitEmployee = async (newData) => {
+    if (!validateData()) return;
+
     try {
       const response = await axiosInstance.post("/users/createUser", newData);
-      console.log(response.data.datas);
-      console.log(newData);
       fetchEmployeeData();
       setShowCreateForm(false);
     } catch (error) {
@@ -115,6 +152,7 @@ const Employee = () => {
       medicalLeave: row.original.MedicalLeave,
       attendanceLeave: row.original.AttendanceLeave,
       password: "",
+      email: row.original.Email,
     });
     setIsEdit(true);
     setShowCreateForm(true);
@@ -127,6 +165,7 @@ const Employee = () => {
   };
 
   const handleSave = async () => {
+    if (!validateData()) return;
     try {
       const {
         id,
@@ -141,6 +180,11 @@ const Employee = () => {
         annualLeave,
         medicalLeave,
         attendanceLeave,
+        email,
+        gender,
+        role,
+        dob,
+        address,
       } = newEmployeeData;
       if (!id) {
         console.error("Employee ID is missing.");
@@ -158,6 +202,11 @@ const Employee = () => {
         medicalLeave: parseFloat(medicalLeave),
         attendanceLeave: parseInt(attendanceLeave),
         departmentId: parseInt(departmentId),
+        email,
+        gender,
+        role,
+        dob,
+        address,
       };
 
       const endpoint = `/users/update/${id}`;
@@ -572,7 +621,7 @@ const Employee = () => {
                   <input
                     type="password"
                     placeholder="Password"
-                    required
+                    required={!isEdit}
                     value={newEmployeeData.password}
                     onChange={(e) =>
                       setNewEmployeeData({
@@ -700,7 +749,7 @@ const Employee = () => {
                     className="p-2 border border-gray-300 rounded text-black"
                   />
                   <input
-                    type="text"
+                    type="text" // can include 09, if number, can't start with 0
                     placeholder="Phone Number"
                     required
                     value={newEmployeeData.phoneNumber}
@@ -824,6 +873,17 @@ const Employee = () => {
               Delete
             </button>
           </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={hasFormError}
+        onRequestClose={() => setHasFormError(false)}
+        contentLabel="Status"
+        className="flex justify-center items-center min-h-screen"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-75"
+      >
+        <div className="bg-white p-8 rounded-md shadow-lg text-center">
+          <h2 className="text-2xl mb-4">{formError}</h2>
         </div>
       </Modal>
     </main>
