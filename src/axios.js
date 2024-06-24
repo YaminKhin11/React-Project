@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://10.103.0.142:8000/api/v1",
+  // baseURL: "http://10.103.1.105:8000/api/v1",
+  baseURL: process.env.REACT_APP_BASE_URL,
 });
 
 // Request interceptor
