@@ -7,6 +7,8 @@ import {
   FaEdit,
   FaTrash,
   FaPlus,
+  FaEye,
+  FaEyeSlash,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { axiosInstance } from "./axios";
@@ -51,6 +53,7 @@ const Employee = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [hasFormError, setHasFormError] = useState(false);
   const [formError, setFormError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateData = () => {
     // check empty
@@ -618,19 +621,33 @@ const Employee = () => {
                     }
                     className="p-2 border border-gray-300 rounded text-black"
                   />
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    required={!isEdit}
-                    value={newEmployeeData.password}
-                    onChange={(e) =>
-                      setNewEmployeeData({
-                        ...newEmployeeData,
-                        password: e.target.value,
-                      })
-                    }
-                    className="p-2 border border-gray-300 rounded text-black"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      required={!isEdit}
+                      value={newEmployeeData.password}
+                      onChange={(e) =>
+                        setNewEmployeeData({
+                          ...newEmployeeData,
+                          password: e.target.value,
+                        })
+                      }
+                      className="p-2 border border-gray-300 rounded text-black w-full pr-8"
+                    />
+                    {showPassword ? (
+                      <FaEye
+                        className="text-gray-400 absolute right-0 top-0 bottom-0 m-auto mr-3 cursor-pointer"
+                        onClick={() => setShowPassword(!showPassword)}
+                      />
+                    ) : (
+                      <FaEyeSlash
+                        className="text-gray-400 absolute right-0 top-0 bottom-0 m-auto mr-3 cursor-pointer"
+                        onClick={() => setShowPassword(!showPassword)}
+                      />
+                    )}
+                  </div>
+
                   <select
                     required
                     value={newEmployeeData.gender}

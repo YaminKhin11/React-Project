@@ -104,7 +104,7 @@ function Login({ onLogin }) {
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
-                className={`w-full px-4 py-2 text-sm text-white bg-transparent focus:outline-none ${
+                className={`w-full px-4 py-2 text-sm text-white bg-transparent focus:outline-none pr-8 ${
                   errors.password && "border-red-500"
                 }`}
                 {...register("password", {
