@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useTable, usePagination } from "react-table";
-
 import { FaSearch, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { motion } from "framer-motion";
 import DatePicker from "react-datepicker";
