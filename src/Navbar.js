@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { HiOutlineLogout } from "react-icons/hi";
-import ProfileImage from "./images/profile.jpg";
-import LogoImage from "./images/triple.png";
+
+import LogoImage from "./images/lg.png";
 import { UserContext } from "./UserContext";
 
 const Navbar = () => {
@@ -37,7 +37,7 @@ const Navbar = () => {
     user && (
       <section className={`${isLoginPage ? "hidden" : ""} w-full`}>
         <nav className="bg-[#0e0e0e] p-3 h-14 w-full flex justify-between items-center">
-          <img src={LogoImage} alt="Triple" className="h-12" />
+          <img src={LogoImage} alt="Staff" className="h-12" />
           <div className="flex items-center gap-4">
             <div
               className="relative cursor-pointer"
